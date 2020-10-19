@@ -33,4 +33,28 @@ adduser <username> sudo
 ```bash
 nano /etc/ssh/sshd_config
 ```
-`CTRL+W` and type `PermitRootLogin` and set it `no` value
+`ctrl+w` and type `PermitRootLogin` and set it `no` value. Then save it `ctrl+o` and exit `ctrl+x`
+
+## Restart SSHD
+```bash
+systemctl restart ssh
+```
+And logout at **LAST TIME**
+```bash
+exit
+```
+
+## Login with a new user
+```bash
+ssh <username>@<server-ip>
+```
+Type a password
+
+## Copy public ssh key
+Copy the entry of id_rsa.pub
+```bash
+mkdir ~/.ssh
+nano ~/.ssh/authorized_keys # and paste pub key
+sudo chmod -R 700 ~/.ssh
+```
+Then save it `ctrl+o` and exit `ctrl+x`
