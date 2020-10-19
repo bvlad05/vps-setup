@@ -79,3 +79,10 @@ exit
 ```
 
 ## Firewall setup
+```bash
+sudo apt install ufw
+sudo ufw allow 'Nginx HTTP'
+sudo ufw enable
+sudo ufw status
+```
+**NOW NGINX MUST WORK!**
