@@ -86,3 +86,11 @@ sudo ufw enable
 sudo ufw status
 ```
 **NOW NGINX MUST WORK!**
+
+## Installing MySQL to Manage Site Data
+
+#### Install MySQL by typing
+```bash
+sudo apt install mysql-server
+sudo mysql_secure_installation
+```
