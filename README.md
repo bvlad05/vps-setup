@@ -163,3 +163,18 @@ curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 sudo apt install -y nodejs
 ```
+
+## Install the let’s encrypt Certbot Client
+```bash
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx -y
+sudo ufw allow 'Nginx Full'
+sudo ufw delete allow 'Nginx HTTP'
+sudo certbot --nginx -d example.com -d www.example.com
+```
+#### Cron job for let's encrypt renewal.
+```bash
+sudo nano /etc/crontab
+43 6 * * * certbot renew --post-hook "systemctl restart nginx"
+```
