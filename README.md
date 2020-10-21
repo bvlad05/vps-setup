@@ -110,6 +110,7 @@ for i in ssh http https
 do
            ufw allow $i
 done
+# sudo ufw allow 'Nginx Full'
 sudo ufw enable
 sudo ufw status
 ```
