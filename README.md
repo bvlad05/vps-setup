@@ -16,8 +16,7 @@ Type a new password
 
 #### Update os
 ```bash
-apt-get update
-apt-get upgrade
+apt update && apt upgrade -y
 ```
 
 #### Add a new user
@@ -61,6 +60,19 @@ sudo chmod -R 700 ~/.ssh
 ```
 Then save it `ctrl+o` and exit `ctrl+x`
 
+#### Connect without paddword. Type locally
+```bash
+ssh-agent ~/.ssh/key_name
+# If you got an error "Could not open a connection to your authentication agent", make next
+eval `ssh-agent -s` # and repeat the command
+```
+Now you can create alias to connection
+```bash
+nano ~/.bash_profile # .bashrc in WSL
+# add next line to the bottom of file
+alias ssh-conn='ssh <user_name>@<server-ip>'
+```
+
 #### Disable connections by password
 ```bash
 sudo nano /etc/ssh/sshd_config
@@ -78,19 +90,76 @@ And logout and try again
 exit
 ```
 
-## Firewall setup
+## Install Nginx
 ```bash
-sudo apt install ufw
-sudo ufw allow 'Nginx HTTP'
+# if you have preinstalled Apatche2 remove it
+sudo service apache2 stop
+sudo apt-get purge apache2 apache2-utils apache2.2-bin apache2-common
+sudo apt-get autoremove --purge
+whereis apache2
+sudo rm -Rf /etc/apache2 /usr/lib/apache2 /usr/include/apache2
+```
+
+```bash
+sudo apt install ufw nginx -y
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo systemctl status nginx
+sudo -i
+for i in ssh http https
+do
+           ufw allow $i
+done
 sudo ufw enable
 sudo ufw status
 ```
-**NOW NGINX MUST WORK!**
 
 ## Installing MySQL to Manage Site Data
 
 #### Install MySQL by typing
 ```bash
-sudo apt install mysql-server
+sudo apt update
+sudo apt-get install mariadb-server mariadb-client -y
 sudo mysql_secure_installation
+# Set password
+sudo mysql -u root -p
+MariaDB [(none)]> GRANT ALL ON *.* TO 'admin'@'localhost' IDENTIFIED BY 'admin' WITH GRANT OPTION;
+MariaDB [(none)]> FLUSH PRIVILEGES;
+MariaDB [(none)]> exit;
+```
+
+## Install PHP
+```bash
+sudo apt install software-properties-common
+sudo add-apt-repository ppa:ondrej/php
+sudo apt update
+sudo apt -y install php7.4
+sudo apt install php7.4-fpm php7.4-common php7.4-mysql php7.4-xml php7.4-xmlrpc php7.4-curl php7.4-gd php7.4-imagick php7.4-cli php7.4-dev php7.4-imap php7.4-mbstring php7.4-opcache php7.4-soap php7.4-zip php7.4-intl -y
+sudo apt install unzip
+cd ~
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+# Copy verified hash on https://composer.github.io/pubkeys.html and paste it to $HASH variable
+HASH=<hash_from_https://composer.github.io/pubkeys.html>
+php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+composer --version
+sudo nano /etc/php/7.4/fpm/php.ini
+```
+```ini
+file_uploads = On
+allow_url_fopen = On
+short_open_tag = On
+memory_limit = 256M
+cgi.fix_pathinfo = 0
+upload_max_filesize = 100M
+max_execution_time = 360
+date.timezone = Europe/Kiev
+```
+
+## Install Node.js
+```
+cd ~
+curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh
+sudo bash nodesource_setup.sh
+sudo apt install -y nodejs
 ```
