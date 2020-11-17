@@ -1,5 +1,7 @@
 # Website configuration
 
+Also you can conf [generator](https://lemp-confs-generator.vercel.app/) 
+
 ## Add user for the project
 ```sh
 useradd -d /home/{{ username }} -g www-data -m -s /bin/bash {{ username }}
