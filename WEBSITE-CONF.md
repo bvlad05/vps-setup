@@ -1,6 +1,6 @@
 # Website configuration
 
-Also you can conf [generator](https://lemp-confs-generator.vercel.app/) 
+Also you can use conf [generator](https://lemp-confs-generator.vercel.app/) 
 
 ## Add user for the project
 ```sh
